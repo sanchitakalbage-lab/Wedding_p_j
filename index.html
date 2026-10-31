@@ -47,9 +47,8 @@ section {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background: radial-gradient(ellipse at 50% 40%, #701d36, #260713 75%);
   position: relative;
-  background:
-    radial-gradient(ellipse at 50% 40%, #701d36, #260713 75%);
 }
 
 .hero::before {
@@ -59,17 +58,15 @@ section {
   color: var(--gold);
   font-size: 20px;
   letter-spacing: 10px;
-  animation: twinkle 3s infinite alternate;
 }
 
 .hero img {
   display: block;
   width: min(440px, 100%);
-  max-height: 69svh;
+  max-height: 65svh;
   object-fit: contain;
   border: 1px solid var(--gold);
   box-shadow: 0 15px 55px #0009;
-  animation: appear 2s ease both;
 }
 
 h1 {
@@ -93,14 +90,12 @@ h1 {
 }
 
 .scroll {
-  display: inline-block;
   color: var(--gold);
   text-decoration: none;
   margin-top: 28px;
   font-family: 'Cinzel', serif;
   font-size: 11px;
   letter-spacing: 3px;
-  animation: pulse 2s infinite;
 }
 
 .reveal-section {
@@ -109,8 +104,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background:
-    radial-gradient(ellipse at center, #681a32, #260713);
+  background: radial-gradient(ellipse at center, #681a32, #260713);
   padding: 60px 20px;
 }
 
@@ -119,12 +113,10 @@ h1 {
   font-family: 'Cinzel', serif;
   font-size: clamp(25px, 6vw, 34px);
   font-weight: 400;
-  margin: 12px 0;
 }
 
 .description {
   font-size: 19px;
-  color: var(--ivory);
 }
 
 .scratch-card {
@@ -156,6 +148,7 @@ h1 {
   background: var(--ivory);
   touch-action: none;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .hidden-date {
@@ -172,13 +165,12 @@ h1 {
 
 .hidden-date strong {
   font-family: 'Cinzel', serif;
-  font-size: clamp(19px, 5vw, 27px);
+  font-size: clamp(17px, 5vw, 27px);
   font-weight: 500;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 }
 
 .hidden-date span {
-  font-family: 'Cormorant Garamond', serif;
   font-size: 16px;
   letter-spacing: 3px;
 }
@@ -190,7 +182,7 @@ h1 {
   height: 100%;
   touch-action: none;
   cursor: crosshair;
-  transition: opacity 1s ease;
+  transition: opacity .8s ease;
 }
 
 .scratch-area.revealed #scratch {
@@ -206,40 +198,30 @@ h1 {
   letter-spacing: 3px;
 }
 
-@keyframes appear {
-  from {
-    opacity: 0;
-    transform: translateY(25px);
+@media (max-width: 480px) {
+  section {
+    padding: 30px 15px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .scratch-card {
+    padding: 28px 15px;
   }
-}
 
-@keyframes pulse {
-  50% { opacity: .5; }
-}
-
-@keyframes twinkle {
-  from { opacity: .4; }
-  to { opacity: 1; }
+  .scratch-area {
+    height: 135px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- OPENING INVITATION -->
-
 <section class="hero">
 
   <p class="intro">A BEAUTIFUL BEGINNING</p>
 
-  <img
-    src="invitation.png"
-    alt="Priyanka and Jayendra wedding invitation"
-  >
+  <img src="invitation.png"
+       alt="Priyanka and Jayendra wedding invitation">
 
   <h1>
     Priyanka<br>
@@ -254,9 +236,6 @@ h1 {
   </a>
 
 </section>
-
-
-<!-- SCRATCH TO REVEAL -->
 
 <section class="reveal-section" id="reveal">
 
@@ -278,9 +257,7 @@ h1 {
 
       <div class="hidden-date">
         <span>THE WEDDING DAY</span>
-
         <strong>14 NOVEMBER 2026</strong>
-
         <span>SAVE THE DATE</span>
       </div>
 
@@ -300,7 +277,6 @@ h1 {
 
 </section>
 
-
 <script>
 const canvas = document.getElementById("scratch");
 const area = document.getElementById("scratchArea");
@@ -311,12 +287,11 @@ let revealed = false;
 let lastCheck = 0;
 
 function setupCanvas() {
-
   const rect = area.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
+  canvas.width = Math.round(rect.width * dpr);
+  canvas.height = Math.round(rect.height * dpr);
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
@@ -325,33 +300,30 @@ function setupCanvas() {
   );
 
   gradient.addColorStop(0, "#fff0b9");
-  gradient.addColorStop(0.25, "#c79b4d");
-  gradient.addColorStop(0.5, "#f7dc94");
-  gradient.addColorStop(0.75, "#aa7935");
+  gradient.addColorStop(.25, "#c79b4d");
+  gradient.addColorStop(.5, "#f7dc94");
+  gradient.addColorStop(.75, "#aa7935");
   gradient.addColorStop(1, "#f4d68d");
 
+  ctx.globalCompositeOperation = "source-over";
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, rect.width, rect.height);
 
   ctx.strokeStyle = "#ffe9b4";
   ctx.lineWidth = 1;
 
-  for (
-    let i = -rect.height;
-    i < rect.width + rect.height;
-    i += 13
-  ) {
+  for (let i = -rect.height;
+       i < rect.width + rect.height;
+       i += 13) {
     ctx.beginPath();
     ctx.moveTo(i, 0);
     ctx.lineTo(i - rect.height, rect.height);
     ctx.stroke();
   }
 
-  ctx.globalCompositeOperation = "source-over";
   ctx.fillStyle = "#543218";
   ctx.font = "bold 14px Georgia";
   ctx.textAlign = "center";
-
   ctx.fillText(
     "✧ SCRATCH HERE ✧",
     rect.width / 2,
@@ -360,7 +332,6 @@ function setupCanvas() {
 }
 
 function getPosition(event) {
-
   const rect = canvas.getBoundingClientRect();
 
   return {
@@ -370,16 +341,38 @@ function getPosition(event) {
 }
 
 function erase(x, y) {
-
   ctx.globalCompositeOperation = "destination-out";
-
   ctx.beginPath();
   ctx.arc(x, y, 20, 0, Math.PI * 2);
   ctx.fill();
 }
 
-canvas.addEventListener("pointerdown", event => {
+function checkReveal() {
+  if (revealed) return;
 
+  const pixels = ctx.getImageData(
+    0, 0, canvas.width, canvas.height
+  ).data;
+
+  let erased = 0;
+  let total = 0;
+
+  // Sample alpha values across the canvas.
+  for (let i = 3; i < pixels.length; i += 4 * 16) {
+    total++;
+
+    if (pixels[i] < 128) {
+      erased++;
+    }
+  }
+
+  if (total && erased / total > 0.38) {
+    revealed = true;
+    area.classList.add("revealed");
+  }
+}
+
+canvas.addEventListener("pointerdown", event => {
   if (revealed) return;
 
   drawing = true;
@@ -390,19 +383,19 @@ canvas.addEventListener("pointerdown", event => {
 });
 
 canvas.addEventListener("pointermove", event => {
-
   if (!drawing || revealed) return;
 
   const p = getPosition(event);
   erase(p.x, p.y);
 
-  if (performance.now() - lastCheck > 400) {
+  if (performance.now() - lastCheck > 350) {
     lastCheck = performance.now();
     checkReveal();
   }
 });
 
 function stopDrawing() {
+  if (!drawing) return;
 
   drawing = false;
   checkReveal();
@@ -410,43 +403,21 @@ function stopDrawing() {
 
 canvas.addEventListener("pointerup", stopDrawing);
 canvas.addEventListener("pointercancel", stopDrawing);
-
-function checkReveal() {
-
-  if (revealed) return;
-
-  const pixels = ctx.getImageData(
-    0, 0, canvas.width, canvas.height
-  ).data;
-
-  let erased = 0;
-  let total = 0;
-
-  for (let i = 3; i < pixels.length; i += 48) {
-
-    total++;
-
-    if (pixels[i] < 128) {
-      erased++;
-    }
-  }
-
-  if (total > 0 && erased / total > 0.38) {
-
-    revealed = true;
-    area.classList.add("revealed");
-
-  }
-}
+canvas.addEventListener("lostpointercapture", stopDrawing);
 
 setupCanvas();
 
+// Avoid resetting the scratch coating during resizing.
+let resizeTimer;
+
 window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
 
-  if (!revealed) {
-    setupCanvas();
-  }
-
+  resizeTimer = setTimeout(() => {
+    if (!revealed && !drawing) {
+      setupCanvas();
+    }
+  }, 200);
 });
 </script>
 
